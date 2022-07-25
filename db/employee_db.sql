@@ -7,7 +7,9 @@ DROP TABLE IF EXISTS department;
 CREATE TABLE department (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(30) NOT NULL
-)
+);
+
+ALTER TABLE department AUTO_INCREMENT = 000
 
 DROP TABLE IF EXISTS role;
 CREATE TABLE role (
@@ -18,7 +20,9 @@ CREATE TABLE role (
     FOREIGN KEY (department_id)
     REFERENCES department(id)
     ON DELETE SET NULL
-)
+);
+
+ALTER TABLE role AUTO_INCREMENT = 000
 
 DROP TABLE IF EXISTS employee;
 CREATE TABLE employee (
@@ -30,4 +34,6 @@ CREATE TABLE employee (
     REFERENCES role(id)
     ON DELETE SET NULL,
     manager_id DEFAULT NULL
-)
+);
+
+ALTER TABLE employee AUTO_INCREMENT = 000
