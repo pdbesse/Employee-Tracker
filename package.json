@@ -1,4 +1,25 @@
 {
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "directories": {
+    "db": "db"
+  },
+  "scripts": {
+    "start": "server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pdbesse/Employee-Tracker.git"
+  },
+  "keywords": [],
+  "author": "Phillip Besse",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pdbesse/Employee-Tracker/issues"
+  },
+  "homepage": "https://github.com/pdbesse/Employee-Tracker#readme",
   "dependencies": {
     "console.table": "^0.10.0",
     "inquirer": "^8.2.4",
