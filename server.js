@@ -23,13 +23,92 @@ const mysql2 = require('mysql2');
 
 const db = mysql.createConnection(
     {
-      host: 'localhost',
-      // MySQL username,
-      user: 'root',
-      // MySQL password
-      password: 'password',
-      database: 'employee_db'
+        host: 'localhost',
+        // MySQL username,
+        user: 'root',
+        // MySQL password
+        password: 'password',
+        database: 'employee_db'
     },
     console.log(`Connected to the employee_db database.`)
-  );
+);
 
+const start = () => {
+    inquirer.prompt(
+        [
+            {
+                name: 'master_select_list',
+                type: 'rawlist',
+                message: 'What would you like to do?',
+                choices: [
+                    'VIEW ALL DEPARTMENTS',
+                    'ADD DEPARTMENT',
+                    'VIEW ALL ROLES',
+                    'ADD ROLE',
+                    'VIEW ALL EMPLOYEES',
+                    'ADD EMPLOYEE',
+                    'UPDATE EMPLOYEE ROLE'
+                ]
+            }
+        ]
+    )
+    .then(choice => {
+        switch (choice.master_select_list) {
+            case 'VIEW ALL DEPARTMENTS':
+            viewDepts();
+            break;
+
+            case 'ADD DEPARTMENT':
+            addDept();
+            break;
+
+            case 'VIEW ALL ROLES':
+            viewRoles();
+            break;
+
+            case 'ADD ROLE':
+            addRole();
+            break;
+
+            case 'VIEW ALL EMPLOYEES':
+            viewEmps();
+            break;
+
+            case 'ADD EMPLOYEE':
+            addEmp();
+
+            case 'UPDATE EMPLOYEE ROLE':
+            updateEmp();
+        }
+    })
+}
+
+const viewDepts = () => {
+
+}
+
+const addDept = () => {
+    
+}
+
+const viewRoles = () => {
+    
+}
+
+const addRole = () => {
+    
+}
+
+const viewEmps = () => {
+    
+}
+
+const addEmp = () => {
+    
+}
+
+const updateEmp = () => {
+    
+}
+
+start();
