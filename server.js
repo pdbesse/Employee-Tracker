@@ -21,7 +21,7 @@
 const inquirer = require('inquirer');
 const mysql2 = require('mysql2');
 
-const db = mysql.createConnection(
+const db = mysql2.createConnection(
     {
         host: 'localhost',
         // MySQL username,
@@ -30,7 +30,7 @@ const db = mysql.createConnection(
         password: 'password',
         database: 'employee_db'
     },
-    console.log(`Connected to the employee_db database.`)
+    console.log(`Connected to the Employee database.`)
 );
 
 const start = () => {
@@ -76,9 +76,11 @@ const start = () => {
 
             case 'ADD EMPLOYEE':
             addEmp();
+            break;
 
             case 'UPDATE EMPLOYEE ROLE':
             updateEmp();
+            break;
         }
     })
 }
@@ -88,7 +90,7 @@ const viewDepts = () => {
 }
 
 const addDept = () => {
-    
+
 }
 
 const viewRoles = () => {
