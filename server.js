@@ -28,7 +28,7 @@ const connection = mysql2.createConnection(
         user: 'root',
         // MySQL password
         password: 'password',
-        database: 'employee_db'
+        database: 'employees'
     },
     console.log(`Connected to the Employee database.`)
 );
@@ -86,7 +86,13 @@ const start = () => {
 }
 
 const viewDepts = () => {
-
+connection.query('SELECT * FROM departments', (err, res) => {
+    if (err) {
+        console.error(err);
+    }
+    console.table(res);
+    start();
+})
 }
 
 const addDept = () => {
