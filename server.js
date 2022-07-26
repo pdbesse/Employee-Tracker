@@ -114,7 +114,13 @@ const addRole = () => {
 }
 
 const viewEmps = () => {
-
+    connection.query('SELECT * FROM employees', (err, res) => {
+        if (err) {
+            console.error(err);
+        }
+        console.table(res);
+        start();
+    })
 }
 
 const addEmp = () => {
