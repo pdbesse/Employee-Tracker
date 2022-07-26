@@ -21,7 +21,7 @@
 const inquirer = require('inquirer');
 const mysql2 = require('mysql2');
 
-const db = mysql2.createConnection(
+const connection = mysql2.createConnection(
     {
         host: 'localhost',
         // MySQL username,
