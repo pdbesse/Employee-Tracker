@@ -47,7 +47,8 @@ const start = () => {
                     'ADD ROLE',
                     'VIEW ALL EMPLOYEES',
                     'ADD EMPLOYEE',
-                    'UPDATE EMPLOYEE ROLE'
+                    'UPDATE EMPLOYEE ROLE',
+                    'EXIT'
                 ]
             }
         ]
@@ -81,6 +82,9 @@ const start = () => {
                 case 'UPDATE EMPLOYEE ROLE':
                     updateEmp();
                     break;
+
+                case 'EXIT':
+                    break;
             }
         })
 }
@@ -96,7 +100,23 @@ const viewDepts = () => {
 }
 
 const addDept = () => {
-
+    inquirer.prompt([
+        {
+            name: 'department',
+            type: 'input',
+            message: 'Enter new department name.'
+        }
+    ])
+    .then(response => {
+        // console.log(response);
+        connection.query('INSERT INTO departments', {name: response.name}), (err, res) => {
+            if (err) {
+                console.error(err);
+            }
+            console.log(`${res} department added.`)
+            start();
+        }
+    })
 }
 
 const viewRoles = () => {
