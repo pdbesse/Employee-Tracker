@@ -52,47 +52,47 @@ const start = () => {
             }
         ]
     )
-    .then(choice => {
-        switch (choice.master_select_list) {
-            case 'VIEW ALL DEPARTMENTS':
-            viewDepts();
-            break;
+        .then(choice => {
+            switch (choice.master_select_list) {
+                case 'VIEW ALL DEPARTMENTS':
+                    viewDepts();
+                    break;
 
-            case 'ADD DEPARTMENT':
-            addDept();
-            break;
+                case 'ADD DEPARTMENT':
+                    addDept();
+                    break;
 
-            case 'VIEW ALL ROLES':
-            viewRoles();
-            break;
+                case 'VIEW ALL ROLES':
+                    viewRoles();
+                    break;
 
-            case 'ADD ROLE':
-            addRole();
-            break;
+                case 'ADD ROLE':
+                    addRole();
+                    break;
 
-            case 'VIEW ALL EMPLOYEES':
-            viewEmps();
-            break;
+                case 'VIEW ALL EMPLOYEES':
+                    viewEmps();
+                    break;
 
-            case 'ADD EMPLOYEE':
-            addEmp();
-            break;
+                case 'ADD EMPLOYEE':
+                    addEmp();
+                    break;
 
-            case 'UPDATE EMPLOYEE ROLE':
-            updateEmp();
-            break;
-        }
-    })
+                case 'UPDATE EMPLOYEE ROLE':
+                    updateEmp();
+                    break;
+            }
+        })
 }
 
 const viewDepts = () => {
-connection.query('SELECT * FROM departments', (err, res) => {
-    if (err) {
-        console.error(err);
-    }
-    console.table(res);
-    start();
-})
+    connection.query('SELECT * FROM departments', (err, res) => {
+        if (err) {
+            console.error(err);
+        }
+        console.table(res);
+        start();
+    })
 }
 
 const addDept = () => {
@@ -100,23 +100,29 @@ const addDept = () => {
 }
 
 const viewRoles = () => {
-    
+    connection.query('SELECT * FROM roles', (err, res) => {
+        if (err) {
+            console.error(err);
+        }
+        console.table(res);
+        start();
+    })
 }
 
 const addRole = () => {
-    
+
 }
 
 const viewEmps = () => {
-    
+
 }
 
 const addEmp = () => {
-    
+
 }
 
 const updateEmp = () => {
-    
+
 }
 
 start();
