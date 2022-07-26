@@ -1,7 +1,7 @@
-USE employees;
+USE employees_db;
 
 INSERT INTO departments (name)
-VALUES ('Upper Management'),
+VALUES ('Rarified Air'),
        ('Accounting'),
        ('R&D'),
        ('Sales');
