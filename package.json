@@ -7,7 +7,7 @@
     "db": "db"
   },
   "scripts": {
-    "start": "server.js"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",

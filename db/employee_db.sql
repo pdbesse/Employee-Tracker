@@ -3,7 +3,7 @@ CREATE DATABASE employees;
 
 USE employees;
 
-DROP TABLE IF EXISTS department;
+DROP TABLE IF EXISTS departments;
 CREATE TABLE departments (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(30) NOT NULL

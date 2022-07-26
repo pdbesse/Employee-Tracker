@@ -90,7 +90,7 @@ const start = () => {
 }
 
 const viewDepts = () => {
-    connection.query('SELECT * FROM departments', (err, res) => {
+    connection.query(`SELECT * FROM departments`, (err, res) => {
         if (err) {
             console.error(err);
         }
@@ -109,18 +109,19 @@ const addDept = () => {
     ])
     .then(response => {
         // console.log(response);
-        connection.query('INSERT INTO departments', {name: response.name}), (err, res) => {
+        connection.query(`INSERT INTO departments (name) VALUES (${`'${response.department}'`})`, (err, res) => {
             if (err) {
                 console.error(err);
             }
-            console.log(`${res} department added.`)
-            start();
-        }
+            console.log(`${`"${response.department}"`} department added.`)
+            
+        })
+        start();
     })
 }
 
 const viewRoles = () => {
-    connection.query('SELECT * FROM roles', (err, res) => {
+    connection.query(`SELECT * FROM roles`, (err, res) => {
         if (err) {
             console.error(err);
         }
@@ -134,7 +135,7 @@ const addRole = () => {
 }
 
 const viewEmps = () => {
-    connection.query('SELECT * FROM employees', (err, res) => {
+    connection.query(`SELECT * FROM employees`, (err, res) => {
         if (err) {
             console.error(err);
         }
