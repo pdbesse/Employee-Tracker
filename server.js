@@ -23,7 +23,7 @@
 
 const inquirer = require('inquirer');
 const mysql2 = require('mysql2');
-const genDeptArr = require('./helpers/helpers.js')
+const { genDeptArr, genRoleArr, genEmpArr } = require('./helpers/helpers.js')
 
 const connection = mysql2.createConnection(
 
@@ -42,6 +42,10 @@ const connection = mysql2.createConnection(
 
 let deptsArr = genDeptArr(connection);
 // console.log('deptsArr', deptsArr);
+let roleArr = genRoleArr(connection);
+// // console.log(roleArr, roleArr);
+let empArr = genEmpArr(connection);
+// // console.log(roleArr, roleArr);
 
 const start = () => {
     inquirer.prompt(
@@ -160,6 +164,7 @@ const addRole = () => {
         }
     ])
         .then((response) => {
+            connection.query(`INSERT INTO roles (title, salary, department_id)`)
             console.log(response);
             start();
         })
@@ -177,11 +182,39 @@ const viewEmps = () => {
 }
 
 const addEmp = () => {
+    inquirer.prompt([
+        {
+            name: 'first_name',
+            type: 'input',
+            message: "What is your new employee's first name?"
+        },
+        {
+            name: 'last_name',
+            type: 'input',
+            message: "What is your new employee's last name?"
+        },
+        {
+            name: 'title',
+            type: 'rawlist',
+            message: "What is your new employee's title?",
+            choices: roleArr
+        },
+        {
+            name: 'manager_id',
+            type: 'rawlist',
+            message: "Who is your new employee's manager?",
+            choices: empArr
+        }
+    ])
+    .then((response) => {
+        console.log(response);
+        start();
+    })
 
 }
 
 const updateEmp = () => {
-
+        start();
 }
 
 start();
