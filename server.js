@@ -164,12 +164,16 @@ const addRole = () => {
         }
     ])
         .then((response) => {
-            connection.query(`INSERT INTO roles (title, salary, department_id)`)
-            console.log(response);
-            start();
-        })
+            connection.query(`INSERT INTO roles SET ?`, { title: response.title, salary: response.salary, department: response.department }, (err, res) => {
+                if (err) {
+                    console.error(err);
+                } else {
+                    // console.table(res);
+                };
+                start();
+            });
+        });
 };
-
 
 const viewEmps = () => {
     connection.query(`SELECT employees.id, employees.first_name, employees.last_name, roles.title, departments.name AS department, roles.salary, employees.manager_id FROM employees INNER JOIN roles on employees.role_id=roles.id INNER JOIN departments ON departments.id=roles.department_id`, (err, res) => {
@@ -200,21 +204,55 @@ const addEmp = () => {
             choices: roleArr
         },
         {
-            name: 'manager_id',
+            name: 'manager_name',
             type: 'rawlist',
             message: "Who is your new employee's manager?",
             choices: empArr
         }
     ])
-    .then((response) => {
-        console.log(response);
-        start();
-    })
+        .then((response) => {
+            // convertManagerInfo = () => {
+            let manID;
+            connection.query(`SELECT * FROM employees`, (err, employees) => {
+                // console.log(employees);
+                if (err) {
+                    console.error(err);
+                }
+                for (i = 0; i < employees.length; i++) {
+                    if (response.manager_name.includes(employees[i].last_name)) {
+                        manID = employees[i].manager_id;
+                    }
+                }
+
+                let roleID;
+                connection.query(`SELECT * FROM roles`, (err, roles) => {
+                    // console.log(roles);
+                    if (err) {
+                        console.error(err);
+                    }
+                    for (i = 0; i < roles.length; i++) {
+                        if (response.title === roles[i].title) {
+                            roleID = roles[i].id;
+                        }
+                    }
+                    // console.log(roleID);
+                    connection.query(`INSERT INTO employees SET ?`, { first_name: response.first_name, last_name: response.last_name, role_id: roleID, manager_id: manID }, (err, res) => {
+                        if (err) {
+                            console.error(err);
+                        } else {
+                            // console.log('end reached succesfully');
+                            console.table(res);
+                        };
+                        start();
+                    });
+                })
+            })
+        });
 
 }
 
 const updateEmp = () => {
-        start();
+    start();
 }
 
 start();

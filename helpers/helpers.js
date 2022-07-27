@@ -6,7 +6,7 @@ const genDeptArr = (connection) => {
             console.error(err);
         }
         for (i = 0; i < departments.length; i++) {
-            deptArr.push({'departments[i].id': 'departments[i].name'});
+            deptArr.push(departments[i].name);
         };
     });
     // console.log('helper', deptArr);
@@ -25,6 +25,7 @@ const genRoleArr = (connection) => {
         };
     });
     // console.log('helper', roleArr);
+    console.log(roleArr);
     return roleArr;
 };
 
