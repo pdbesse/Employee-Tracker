@@ -1,30 +1,9 @@
-// inquirer for prompts/responses
-// application start:
-// view all departments
-// add department
-// view all roles
-// add role
-// view all employees
-// add employee
-// update employee role
-
-// view all depts => 
-// table showing dept names and dept id
-// view all roles =>
-// view all employees =>
-// table showing employee id, first/last, job title, depts, salaries, managers
-// add dept => enter new dept name; add to db
-// add role => enter name, salary, dept; add to db
-// add employee => enter first/last, role, manager; add to db
-// update employee role => select employee, select new role; add to db
-
-// for addRole() and addEmp() department and role prompt choices,
-// use arrays populated with data from tables?
-
 const inquirer = require('inquirer');
 const mysql2 = require('mysql2');
+// imports helper functions
 const { genDeptArr, genRoleArr, genEmpArr } = require('./helpers/helpers.js')
 
+// creates connection to mysql database
 const connection = mysql2.createConnection(
 
     {
@@ -40,19 +19,19 @@ const connection = mysql2.createConnection(
 
 // console.log(genDeptArr(connection));
 
-
+// instantiate variables for returning departments, roles, employees arrays
 var deptsArr;
 var roleArr;
 var empArr;
 
+// starts app
 const start = () => {
 
+    // defines variables as arrays returned in helper functions
     deptsArr = genDeptArr(connection);
-    // console.log('deptsArr', deptsArr);
     roleArr = genRoleArr(connection);
-    // // console.log(roleArr, roleArr);
     empArr = genEmpArr(connection);
-    // // console.log(roleArr, roleArr);
+
     inquirer.prompt(
         [
             {
@@ -114,8 +93,9 @@ const start = () => {
         })
 }
 
+// view departments function
 const viewDepts = () => {
-    console.log('test')
+    // select and console.table everything in departments table
     connection.query(`SELECT * FROM departments`, (err, res) => {
         if (err) {
             console.error(err);
@@ -125,6 +105,7 @@ const viewDepts = () => {
     })
 }
 
+// add department function
 const addDept = () => {
     inquirer.prompt([
         {
@@ -134,7 +115,7 @@ const addDept = () => {
         }
     ])
         .then(response => {
-            // console.log(response);
+            // inserts new department name into departments table
             connection.query(`INSERT INTO departments (name) VALUES ('${response.department}')`, (err, res) => {
                 if (err) {
                     console.error(err);
@@ -153,7 +134,9 @@ const addDept = () => {
         });
 };
 
+// view roles function
 const viewRoles = () => {
+    // returns a table with role id, role title, role salary, and department name
     connection.query(`SELECT roles.id, roles.title, roles.salary, departments.name AS department FROM roles INNER JOIN departments ON roles.department_id=departments.id`, (err, res) => {
         if (err) {
             console.error(err);
@@ -163,6 +146,7 @@ const viewRoles = () => {
     })
 }
 
+// function to add role
 const addRole = () => {
     inquirer.prompt([
         {
@@ -179,21 +163,28 @@ const addRole = () => {
             name: 'department',
             type: 'rawlist',
             message: 'Select new role department.',
+            // returns departments array as choices
             choices: deptsArr
         }
     ])
         .then((responses) => {
+            // instantiate department id variable
+            // used to convert department name into department id
             let deptID;
             connection.query(`SELECT * FROM departments`, (err, departments) => {
                 // console.log(departments);
                 if (err) {
                     console.error(err);
                 }
+                // iterate through departments object array
                 for (i = 0; i < departments.length; i++) {
+                    // if department response === a department name in the array of objects
                     if (responses.department === departments[i].name) {
+                        // var deptID = that department's id
                         deptID = departments[i].id;
                     }
                 }
+                // insert responses into roles table
                 connection.query(`INSERT INTO roles SET ?`, { title: responses.title, salary: responses.salary, department_id: deptID }, (err, res) => {
                     if (err) {
                         console.error(err);
@@ -215,7 +206,9 @@ const addRole = () => {
         })
 };
 
+// view employees function
 const viewEmps = () => {
+    // returns table with employee id, employee names, employee title, department name, salary, and manager id
     connection.query(`SELECT employees.id, employees.first_name, employees.last_name, roles.title, departments.name AS department, roles.salary, employees.manager_id FROM employees INNER JOIN roles on employees.role_id=roles.id INNER JOIN departments ON departments.id=roles.department_id`, (err, res) => {
         if (err) {
             console.error(err);
@@ -225,6 +218,7 @@ const viewEmps = () => {
     })
 }
 
+// add employee function
 const addEmp = () => {
     inquirer.prompt([
         {
@@ -241,41 +235,50 @@ const addEmp = () => {
             name: 'title',
             type: 'rawlist',
             message: "What is your new employee's title?",
+            // returns roles array as choices
             choices: roleArr
         },
         {
             name: 'manager_name',
             type: 'rawlist',
             message: "Who is your new employee's manager?",
+            // returns employees array as choices
             choices: empArr
         }
     ])
         .then((response) => {
-            // convertManagerInfo = () => {
+            // instantiate manager id variable
+            // used to convert manager name to manager id
             let manID;
             connection.query(`SELECT * FROM employees`, (err, employees) => {
-                // console.log(employees);
                 if (err) {
                     console.error(err);
                 }
+                // iterates through array of employee objects
                 for (i = 0; i < employees.length; i++) {
+                    // if manager name response includes employee last name from an object in the array
                     if (response.manager_name.includes(employees[i].last_name)) {
+                        // manID = that employee's id number
                         manID = employees[i].id;
                     }
                 }
 
+                // instantiate role id variable
+                // used to convert role title into role id
                 let roleID;
                 connection.query(`SELECT * FROM roles`, (err, roles) => {
-                    // console.log(roles);
                     if (err) {
                         console.error(err);
                     }
+                    // iterates through array of roles objects
                     for (i = 0; i < roles.length; i++) {
+                        // if title response === title in a role object
                         if (response.title === roles[i].title) {
+                            // roleID = that role's id
                             roleID = roles[i].id;
                         }
                     }
-                    // console.log(roleID);
+                    // inserts new employee into employees table
                     connection.query(`INSERT INTO employees SET ?`, { first_name: response.first_name, last_name: response.last_name, role_id: roleID, manager_id: manID }, (err, res) => {
                         if (err) {
                             console.error(err);
@@ -297,34 +300,41 @@ const addEmp = () => {
 
 }
 
+// update employee function
 const updateEmp = () => {
     inquirer.prompt([
         {
             name: 'employee',
             type: 'rawlist',
             message: 'Which employee would you like to update?',
+            // returns employee array as choices
             choices: empArr
         },
         {
             name: 'new_title',
             type: 'rawlist',
             message: "What is your new employee's new title?",
+            // returns roles array as choices
             choices: roleArr
         }
     ])
         .then((responses) => {
+            // instantiate employee id variable
             let empID;
             connection.query(`SELECT * FROM employees`, (err, employees) => {
                 // console.log(employees);
                 if (err) {
                     console.error(err);
                 }
+                // iterate through employee objects
                 for (i = 0; i < employees.length; i++) {
+                    // if employee response name includes a last name in an employee object
                     if (responses.employee.includes(employees[i].last_name)) {
+                        // empID = that object's id
                         empID = employees[i].id;
                     }
                 }
-
+                // see lines 266-278
                 let roleID;
                 connection.query(`SELECT * FROM roles`, (err, roles) => {
                     // console.log(roles);
@@ -337,7 +347,7 @@ const updateEmp = () => {
                             // console.log(roleID);
                         }
                     }
-
+                    // update employee's role id where that employee's id = empID
                     connection.query(`UPDATE employees SET role_id = '${roleID}' WHERE id = '${empID}'`, (err, res) => {
                         if (err) {
                             console.error(err);
@@ -351,7 +361,9 @@ const updateEmp = () => {
         })
 };
 
+// view employee by manager function
 const viewEmpMan = () => {
+    // returns table with concatenated employee name and concatenated manager name
     connection.query(
         `SELECT CONCAT(employees.first_name, " ", employees.last_name) AS name, CONCAT(manager.first_name, " ", manager.last_name) AS manager FROM employees LEFT JOIN employees manager on manager.id=employees.manager_id`, (err, results) => {
             if (err) {
