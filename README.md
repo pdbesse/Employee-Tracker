@@ -256,7 +256,7 @@ Technology Used:
 
 ## Credits
 
-All coding credited to Phillip Besse.
+All coding credited to Phillip Besse. Code debugged with Kavya Mandla and Kevin Hernandez.
 
 Websites Referenced:
 * [DigitalOcean - Switch Case](https://www.digitalocean.com/community/tutorials/how-to-use-the-switch-statement-in-javascript)
