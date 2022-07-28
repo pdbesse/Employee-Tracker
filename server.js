@@ -138,13 +138,20 @@ const addDept = () => {
             connection.query(`INSERT INTO departments (name) VALUES ('${response.department}')`, (err, res) => {
                 if (err) {
                     console.error(err);
-                }
-                console.log(`${response.department} department added.`)
-
-            })
+                } else {
+                    connection.query(`SELECT * FROM departments`, (err, res) => {
+                        if (err) {
+                            console.error(err);
+                        } else {
+                            // console.table(res);
+                            console.log(`${response.department} department added.`)
+                        }
+                    });
+                };
+            });
             start();
-        })
-}
+        });
+};
 
 const viewRoles = () => {
     connection.query(`SELECT roles.id, roles.title, roles.salary, departments.name AS department FROM roles INNER JOIN departments ON roles.department_id=departments.id`, (err, res) => {
@@ -191,13 +198,13 @@ const addRole = () => {
                     if (err) {
                         console.error(err);
                     } else {
-                        connection.query(`SELECT * FROM employees`, (err, res) => {
+                        connection.query(`SELECT * FROM roles`, (err, res) => {
                             if (err) {
                                 console.error(err);
                             } else {
                                 // console.table(res);
                                 console.log(`${responses.title} role added.`)
-                                start();
+                                // start();
                             }
                         });
                     };
@@ -273,9 +280,14 @@ const addEmp = () => {
                         if (err) {
                             console.error(err);
                         } else {
-                            // console.log('end reached succesfully');
-                            // console.table(res);
-                            console.log(`New employee added.`)
+                            connection.query(`SELECT * from employees`, (err, res) => {
+                                if (err) {
+                                    console.error(err);
+                                } else {
+                                    // console.table(res);
+                                    console.log(`New employee added.`)
+                                }
+                            });
                         };
                         start();
                     });

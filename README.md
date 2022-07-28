@@ -34,6 +34,8 @@ npm start
 ```
 This will launch the program.
 
+A video walkthrough of the app can be viewed [here](https://www.youtube.com/watch?v=7SKkxWPGjJw).
+
 ---
 
 ## Usage

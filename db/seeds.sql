@@ -20,9 +20,9 @@ VALUES ('General Manager', 5000000, 1),
 
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
 VALUES ('James', 'Baker', 1, NULL),
-       ('Renee', 'Rudolph', 2, NULL),
+       ('Renee', 'Rudolph', 2, 1),
        ('Morton', 'Furbish', 3, 2),
-       ('Fitzroy', 'Benton', 4, NULL),
+       ('Fitzroy', 'Benton', 4, 1),
        ('Jodi', 'Alton', 5, 4),
-       ('Augustine', 'Adella', 6, NULL),
+       ('Augustine', 'Adella', 6, 1),
        ('Humphrey', 'Connor', 7, 6);
