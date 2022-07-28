@@ -40,11 +40,13 @@ const connection = mysql2.createConnection(
 
 // console.log(genDeptArr(connection));
 
+
 var deptsArr;
 var roleArr;
 var empArr;
 
 const start = () => {
+
     deptsArr = genDeptArr(connection);
     // console.log('deptsArr', deptsArr);
     roleArr = genRoleArr(connection);
@@ -65,6 +67,7 @@ const start = () => {
                     'VIEW ALL EMPLOYEES',
                     'ADD EMPLOYEE',
                     'UPDATE EMPLOYEE ROLE',
+                    'VIEW EMPLOYEES BY MANAGER',
                     'EXIT'
                 ]
             }
@@ -100,7 +103,12 @@ const start = () => {
                     updateEmp();
                     break;
 
+                case 'VIEW EMPLOYEES BY MANAGER':
+                    viewEmpMan();
+                    break;
+
                 case 'EXIT':
+                    connection.end();
                     break;
             }
         })
@@ -330,5 +338,18 @@ const updateEmp = () => {
             })
         })
 };
+
+const viewEmpMan = () => {
+    connection.query(
+        `SELECT CONCAT(employees.first_name, " ", employees.last_name) AS name, CONCAT(manager.first_name, " ", manager.last_name) AS manager FROM employees LEFT JOIN employees manager on manager.id=employees.manager_id`, (err, results) => {
+            if (err) {
+                console.error(err);
+            } else {
+                console.table(results);
+            };
+            start();
+        }
+    )
+}
 
 start();
