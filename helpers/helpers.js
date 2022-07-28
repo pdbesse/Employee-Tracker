@@ -25,7 +25,7 @@ const genRoleArr = (connection) => {
         };
     });
     // console.log('helper', roleArr);
-    console.log(roleArr);
+    // console.log(roleArr);
     return roleArr;
 };
 

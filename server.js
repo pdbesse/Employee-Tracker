@@ -40,14 +40,17 @@ const connection = mysql2.createConnection(
 
 // console.log(genDeptArr(connection));
 
-let deptsArr = genDeptArr(connection);
-// console.log('deptsArr', deptsArr);
-let roleArr = genRoleArr(connection);
-// // console.log(roleArr, roleArr);
-let empArr = genEmpArr(connection);
-// // console.log(roleArr, roleArr);
+var deptsArr;
+var roleArr;
+var empArr;
 
 const start = () => {
+    deptsArr = genDeptArr(connection);
+    // console.log('deptsArr', deptsArr);
+    roleArr = genRoleArr(connection);
+    // // console.log(roleArr, roleArr);
+    empArr = genEmpArr(connection);
+    // // console.log(roleArr, roleArr);
     inquirer.prompt(
         [
             {
@@ -104,6 +107,7 @@ const start = () => {
 }
 
 const viewDepts = () => {
+    console.log('test')
     connection.query(`SELECT * FROM departments`, (err, res) => {
         if (err) {
             console.error(err);
@@ -163,16 +167,37 @@ const addRole = () => {
             choices: deptsArr
         }
     ])
-        .then((response) => {
-            connection.query(`INSERT INTO roles SET ?`, { title: response.title, salary: response.salary, department: response.department }, (err, res) => {
+        .then((responses) => {
+            let deptID;
+            connection.query(`SELECT * FROM departments`, (err, departments) => {
+                // console.log(departments);
                 if (err) {
                     console.error(err);
-                } else {
-                    // console.table(res);
-                };
-                start();
-            });
-        });
+                }
+                for (i = 0; i < departments.length; i++) {
+                    if (responses.department === departments[i].name) {
+                        deptID = departments[i].id;
+                    }
+                }
+                connection.query(`INSERT INTO roles SET ?`, { title: responses.title, salary: responses.salary, department_id: deptID }, (err, res) => {
+                    if (err) {
+                        console.error(err);
+                    } else {
+                        connection.query(`SELECT * FROM employees`, (err, res) => {
+                            if (err) {
+                                console.error(err);
+                            } else {
+                                // console.table(res);
+                                console.log(`${responses.title} role added.`)
+                                start();
+                            }
+                        });
+                    };
+                    start();
+                }
+                )
+            })
+        })
 };
 
 const viewEmps = () => {
@@ -220,7 +245,7 @@ const addEmp = () => {
                 }
                 for (i = 0; i < employees.length; i++) {
                     if (response.manager_name.includes(employees[i].last_name)) {
-                        manID = employees[i].manager_id;
+                        manID = employees[i].id;
                     }
                 }
 
@@ -241,7 +266,8 @@ const addEmp = () => {
                             console.error(err);
                         } else {
                             // console.log('end reached succesfully');
-                            console.table(res);
+                            // console.table(res);
+                            console.log(`New employee added.`)
                         };
                         start();
                     });
@@ -252,7 +278,57 @@ const addEmp = () => {
 }
 
 const updateEmp = () => {
-    start();
-}
+    inquirer.prompt([
+        {
+            name: 'employee',
+            type: 'rawlist',
+            message: 'Which employee would you like to update?',
+            choices: empArr
+        },
+        {
+            name: 'new_title',
+            type: 'rawlist',
+            message: "What is your new employee's new title?",
+            choices: roleArr
+        }
+    ])
+        .then((responses) => {
+            let empID;
+            connection.query(`SELECT * FROM employees`, (err, employees) => {
+                // console.log(employees);
+                if (err) {
+                    console.error(err);
+                }
+                for (i = 0; i < employees.length; i++) {
+                    if (responses.employee.includes(employees[i].last_name)) {
+                        empID = employees[i].id;
+                    }
+                }
+
+                let roleID;
+                connection.query(`SELECT * FROM roles`, (err, roles) => {
+                    // console.log(roles);
+                    if (err) {
+                        console.error(err);
+                    }
+                    for (i = 0; i < roles.length; i++) {
+                        if (responses.new_title === roles[i].title) {
+                            roleID = roles[i].id;
+                            // console.log(roleID);
+                        }
+                    }
+
+                    connection.query(`UPDATE employees SET role_id = '${roleID}' WHERE id = '${empID}'`, (err, res) => {
+                        if (err) {
+                            console.error(err);
+                        } else {
+                            viewEmps()
+                        };
+                    })
+                })
+
+            })
+        })
+};
 
 start();

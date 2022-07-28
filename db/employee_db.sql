@@ -16,7 +16,7 @@ CREATE TABLE roles (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(30) NOT NULL,
     salary DECIMAL NOT NULL,
-    department_id INT,
+    department_id INT NOT NULL,
     FOREIGN KEY (department_id)
     REFERENCES departments(id)
 );
@@ -31,7 +31,9 @@ CREATE TABLE employees (
     role_id INT,
     FOREIGN KEY (role_id)
     REFERENCES roles(id),
-    manager_id INT DEFAULT NULL
+    manager_id INT DEFAULT NULL,
+    FOREIGN KEY (manager_id)
+    REFERENCES employees(id)
 );
 
 ALTER TABLE employees AUTO_INCREMENT = 001;
